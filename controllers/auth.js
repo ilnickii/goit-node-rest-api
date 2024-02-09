@@ -1,5 +1,5 @@
 const { User } = require("../services/user");
-const { HttpError, ctrlWrapper } = require("../helpers");
+const { HttpError, ctrlWrapper, resizeAvatars } = require("../helpers");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const dotenv = require("dotenv");
@@ -77,6 +77,7 @@ const logout = async (req, res) => {
 const updateAvatar = async (req, res) => {
     const { _id } = req.user;
     const { path: tempUpload, originalname } = req.file;
+    await resizeAvatars(tempUpload);
     const filename = `${_id}_${originalname}`;
     const resultUpload = path.join(avatarsDir, filename);
     await fs.rename(tempUpload, resultUpload);
